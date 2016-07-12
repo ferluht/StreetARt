@@ -21,23 +21,38 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
     public void setup() {
 
         // load a set of trackables from a bundled file.
-        ARTrackableSet trackableSet = new ARTrackableSet();
-        trackableSet.loadFromAsset("test.KARMarker");
+        //ARTrackableSet trackableSet = new ARTrackableSet();
+        //trackableSet.loadFromAsset("TV.KARMarker");
+
+        ARImageTrackable trackable = new ARImageTrackable("TV");
+        trackable.loadFromAsset("Markers/TV.jpg");
 
         ARImageTracker tracker = ARImageTracker.getInstance();
 
         // add our trackables to the tracker.
-        tracker.addTrackableSet(trackableSet);
+        //tracker.addTrackableSet(trackableSet);
+        tracker.addTrackable(trackable);
 
-        // create an image node.
-        ARImageTrackable legoTrackable = tracker.findTrackable("lego");
-        ARImageNode imageNode = new ARImageNode("BatmanLegoMovie.png");
+        // create an image node. а картинку вмеоо обьекта можешь? это и есть картинка. ты имеешь в виде бэтмана? д
+        ARImageTrackable tvTrackable = tracker.findTrackable("TV");//tvTrackable == null
+        ARModelImporter importer = new ARModelImporter();
+        importer.loadFromAsset("output.jet");
+
+        ARModelNode imageNode = (ARModelNode) importer.getNode();
+        //ARImageNode imageNode = new ARImageNode("BatmanLegoMovie.png");
+
+        ARLightMaterial material = new ARLightMaterial();
+        material.setAmbient(0.8f, 0.8f, 0.8f);
+
+        for (ARMeshNode meshNode: importer.getMeshNodes()){
+            meshNode.setMaterial(material);
+        }
 
         // make it smaller.
-        imageNode.scaleBy(0.5f, 0.5f, 0.5f);
+        //imageNode.scaleBy(0.5f, 0.5f, 0.5f);
 
         // add it to the lego trackable.
-        legoTrackable.getWorld().addChild(imageNode);
+        tvTrackable.getWorld().addChild(imageNode);
     }
 
     @Override
