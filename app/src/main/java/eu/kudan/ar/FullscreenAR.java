@@ -10,7 +10,7 @@ import eu.kudan.kudan.*;
  * status bar and navigation/system bar) with user interaction.
  */
 
-public class FullscreenAR extends ARActivity implements ARImageTrackableListener {
+public class FullscreenAR extends ARActivity {
     public void onCreate(Bundle savedInstanceState) {
         // set api key for this package name.
         ARAPIKey key = ARAPIKey.getInstance();
@@ -19,40 +19,40 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
     }
 
     public void setup() {
+        ARImageTrackable trackable = new ARImageTrackable("test");
+        trackable.loadFromAsset("lego.jpg");
 
-        // load a set of trackables from a bundled file.
-        ARTrackableSet trackableSet = new ARTrackableSet();
-        trackableSet.loadFromAsset("test.KARMarker");
+        // Get instance of image tracker manager
+        ARImageTracker trackableManager = ARImageTracker.getInstance();
 
-        ARImageTracker tracker = ARImageTracker.getInstance();
+        // Add image trackable to image tracker manager
+        trackableManager.addTrackable(trackable);
 
-        // add our trackables to the tracker.
-        tracker.addTrackableSet(trackableSet);
+        // Import model
+        ARModelImporter modelImporter = new ARModelImporter();
+        modelImporter.loadFromAsset("testmodel.jet");
+        ARModelNode modelNode = (ARModelNode)modelImporter.getNode();
 
-        // create an image node.
-        ARImageTrackable legoTrackable = tracker.findTrackable("lego");
-        ARImageNode imageNode = new ARImageNode("BatmanLegoMovie.png");
+        // Load model texture
+        ARTexture2D texture2D = new ARTexture2D();
+        texture2D.loadFromAsset("texture.jpg");
 
-        // make it smaller.
-        imageNode.scaleBy(0.5f, 0.5f, 0.5f);
+        // Apply model texture to model texture material
+        ARLightMaterial material = new ARLightMaterial();
+        material.setTexture(texture2D);
+        material.setAmbient(0.8f, 0.8f, 0.8f);
 
-        // add it to the lego trackable.
-        legoTrackable.getWorld().addChild(imageNode);
-    }
-
-    @Override
-    public void didDetect(ARImageTrackable trackable) {
-        Log.i("KudanSamples", "detected " + trackable.getName());
-    }
+        // Apply texture material to models mesh nodes
+        for(ARMeshNode meshNode : modelImporter.getMeshNodes()){
+            meshNode.setMaterial(material);
+        }
 
 
-    @Override
-    public void didTrack(ARImageTrackable trackable) {
-//		Log.i("KudanSamples", "tracked");
-    }
+        modelNode.rotateByDegrees(90,1,0,0);
+        modelNode.scaleByUniform(0.25f);
 
-    @Override
-    public void didLose(ARImageTrackable trackable) {
-        Log.i("KudanSamples", "lost " + trackable.getName());
+        // Add model node to image trackable
+        trackable.getWorld().addChild(modelNode);
+        modelNode.setVisible(true);
     }
 }
