@@ -21,6 +21,8 @@ import eu.kudan.kudan.ARAPIKey;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static String packageName;
+    //AIzaSyBVriLOpZkgSltkpMUPBFE_Y2fagvxSLy4
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +95,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_map) {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
