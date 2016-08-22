@@ -1,6 +1,7 @@
 package eu.kudan.ar;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Environment;
 
 import org.json.JSONArray;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 public class CMSContentManagement implements CMSDownloadManagerInterface, JSONParserInterface {
 
     private static final boolean useOwnServer = true;
-    private static final String url = "http://api.arreality.me/";
 
     private JSONObject downloadedJSON;
     private JSONObject localJSON;
@@ -25,19 +25,24 @@ public class CMSContentManagement implements CMSDownloadManagerInterface, JSONPa
     private Context context;
     private CMSDownloadManager downloadsManager;
     private JSONParser jsonParser;
+    private Location mCurrentLocation;
 
 
     // Sets up listeners
-    public CMSContentManagement(CMSContentManagementInterface inListener, Context inContext) {
+    public CMSContentManagement(CMSContentManagementInterface inListener, Context inContext, Location location) {
         this.contentManagementInferace = inListener;
         this.context = inContext;
         downloadsManager = new CMSDownloadManager (this);
         jsonParser = new JSONParser (this);
+        mCurrentLocation = location;
     }
 
-    public void getObjectsNear(double lat, double lng, int rad){
-        fileDownloadInformation = new ArrayList<CMSFileDownloadInformation>();
-        jsonParser.execute(url+"?act=get_obj_near&lat="+Double.toString(lat)+"&lng="+Double.toString(lng)+"&rad="+ Integer.toString(rad));
+
+    // Downloads JSON file
+    public void getObjectsNear(){
+        double lat = mCurrentLocation.getLatitude();
+        double lng = mCurrentLocation.getLongitude();
+        jsonParser.execute("http://api.arreality.me/?act=get_obj_near&lat=" + Double.toString(lat) + "&lng=" + Double.toString(lng) + "&rad=500");
     }
 
     // Creates file download information from downloaded json, if the file has been updated
@@ -51,34 +56,19 @@ public class CMSContentManagement implements CMSDownloadManagerInterface, JSONPa
                         JSONObject tempJSON = (JSONObject) tempJSONArray.get(i);
                         addFileDownloadInformation(tempJSON);
 
-                        }
                     }
-                    else {
-                        if (CMSUtilityFunctions.compareDates(localJSON.getString("lastUpdated"), downloadedJSON.getString("lastUpdated"))) {
-                            JSONArray tempJSONArray = (JSONArray) downloadedJSON.get("results");
-
-                            for (int i = 0; i < tempJSONArray.length(); i++) {
-                                JSONObject tempJSON = (JSONObject) tempJSONArray.get(i);
-
-                                if (CMSUtilityFunctions.compareDates(localJSON.getString("lastUpdated"), tempJSON.getString("lastUpdated"))) {
-                                    addFileDownloadInformation(tempJSON);
-                                }
-                            }
-                        }
-                        else {
-                            JSONArray tempJSONArray = (JSONArray) downloadedJSON.get("results");
-                            for (int i = 0; i < tempJSONArray.length(); i++) {
-                                JSONObject tempJSON = (JSONObject) tempJSONArray.get(i);
-
-                                if (filesMissingFromDirectory(tempJSON)) {
-                                    addFileDownloadInformation(tempJSON);
-                                }
-                            }
+                } else {
+                    JSONArray tempJSONArray = (JSONArray) downloadedJSON.get("results");
+                    for (int i = 0; i < tempJSONArray.length(); i++) {
+                        JSONObject tempJSON = (JSONObject) tempJSONArray.get(i);
+                        /////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//////////
+                        if (filesMissingFromDirectory(tempJSON)) {
+                            addFileDownloadInformation(tempJSON);
                         }
                     }
                 }
-
             }
+        }
         catch (JSONException e) {
             e.printStackTrace();
         }
@@ -86,13 +76,28 @@ public class CMSContentManagement implements CMSDownloadManagerInterface, JSONPa
 
     private void addFileDownloadInformation (JSONObject tempJSON) {
         try {
-            CMSFileDownloadInformation augmentationFileDownloadinInformation = new CMSFileDownloadInformation();
             CMSFileDownloadInformation markerFileDownloadinInformation = new CMSFileDownloadInformation();
-            if (tempJSON.get("augmentationType").equals("video")) {
-                fileDownloadInformation.add(augmentationFileDownloadinInformation.initAugmentationWithJSON(tempJSON));
-            }
             fileDownloadInformation.add(markerFileDownloadinInformation.initMarkerWithJSON(tempJSON));
 
+            if (tempJSON.get("augmentationType").equals("picture")) {
+                CMSFileDownloadInformation pictureFileDownloadinInformation = new CMSFileDownloadInformation();
+
+                fileDownloadInformation.add(pictureFileDownloadinInformation.initPictureWithJSON(tempJSON));
+            }
+
+            if (tempJSON.get("augmentationType").equals("model")) {
+                CMSFileDownloadInformation modelFileDownloadinInformation = new CMSFileDownloadInformation();
+                CMSFileDownloadInformation textureFileDownloadinInformation = new CMSFileDownloadInformation();
+
+                fileDownloadInformation.add(modelFileDownloadinInformation.initModelWithJSON(tempJSON));
+                fileDownloadInformation.add(textureFileDownloadinInformation.initPictureWithJSON(tempJSON));
+            }
+
+            if (tempJSON.get("augmentationType").equals("video")) {
+                CMSFileDownloadInformation videoFileDownloadinInformation = new CMSFileDownloadInformation();
+
+                fileDownloadInformation.add(videoFileDownloadinInformation.initVideoWithJSON(tempJSON));
+            }
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -164,9 +169,10 @@ public class CMSContentManagement implements CMSDownloadManagerInterface, JSONPa
 
     @Override
     public void jsonFinishedDownloading(JSONObject jsonObject) {
-        downloadedJSON= new JSONObject();
+        downloadedJSON = new JSONObject();
         downloadedJSON = jsonObject;
         localJSON = CMSUtilityFunctions.getLocalJSON();
+        contentManagementInferace.setUpMapMarkers(downloadedJSON);
         addFileDownloadInformationFromJSON();
 
         if (fileDownloadInformation.size() > 0 ) {

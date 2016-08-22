@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 public class CMSTrackable implements Parcelable{
     private int tId;
     private String markerFileURL;
@@ -30,17 +32,33 @@ public class CMSTrackable implements Parcelable{
 
         try {
             tId = (int) jsonObject.get("id");
-            markerFileURL = (String) jsonObject.get("marker");
-            markerFileName = (String) jsonObject.get("markerFileName");
-            augmentationFileURL = (String) jsonObject.get("augmentation");
-            augmentationFileName = (String) jsonObject.get("augmentationFileName");
-            lastUpdated = (String) jsonObject.get("lastUpdated");
+            //markerFileURL = (String) jsonObject.get("marker");
+            //augmentationFileURL = (String) jsonObject.get("augmentation");
+
+
+            String id = Integer.toString(tId);
+
+            markerFileName = id + ".KARMarker";
+
+            if (jsonObject.get("augmentationType").equals("video")) {
+                augmentationFileName = id + ".mp4";
+            }
+
+            if (jsonObject.get("augmentationType").equals("model")) {
+                augmentationFileName = id + ".jet";
+            }
+
+            if (jsonObject.get("augmentationType").equals("picture")) {
+                augmentationFileName = id + ".jpg";
+            }
+
+            /*lastUpdated = (String) jsonObject.get("lastUpdated");
             augmentationRoatation = (int)jsonObject.get("augmentationRotation");
-            fillMarker = (int) jsonObject.get("fillMarker");
+            fillMarker = (int) jsonObject.get("fillMarker");*/
             markerFilePath = String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory() +  "/Assets/" + tId +"/" + markerFileName));
             augmentationFilePath =String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory()+ "/Assets/" + tId +"/" + augmentationFileName));
-            displayFade = (int) jsonObject.get("displayFade");
-            resetTime = (int) jsonObject.get("resetTime");
+            /*displayFade = (int) jsonObject.get("displayFade");
+            resetTime = (int) jsonObject.get("resetTime");*/
             augmentationType = (String) jsonObject.get("augmentationType");
         } catch (JSONException e) {
             e.printStackTrace();

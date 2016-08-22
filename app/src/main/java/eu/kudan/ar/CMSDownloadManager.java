@@ -55,7 +55,7 @@ public class CMSDownloadManager {
         request.setDestinationUri(CMSUtilityFunctions.getUriFromFileDownloadInformation(tempFdl));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        request.setVisibleInDownloadsUi(true);
+        request.setVisibleInDownloadsUi(false);
         tempFdl.setTaskIdentifier(downloadsManager.enqueue(request));
         tempFdl.setIsDownloading(true);
     }
@@ -79,11 +79,8 @@ public class CMSDownloadManager {
                 if (fileDownloadInformation.getFileTitle().equals(trackables.get(i).getAugmentationFileName())) {
                     trackables.get(i).setAugmentationComplete(true);
                 }
-                else {
+                if (fileDownloadInformation.getFileTitle().equals(trackables.get(i).getMarkerFileName())) {
                     trackables.get(i).setMarkerComplete(true);
-                    if(trackables.get(i).getAugmentationType().equals("text")){
-                        trackables.get(i).setAugmentationComplete(true);
-                    }
                 }
                 if (trackables.get(i).getAugmentationComplete()&& trackables.get(i).getMarkerComplete()) {
                     writeCompletedTextFile(trackables.get(i));
@@ -95,7 +92,7 @@ public class CMSDownloadManager {
     // Writes a completed text file to the trackables folder if it has finished downloading
     private void writeCompletedTextFile(CMSTrackable trackable) {
         try {
-            File checkFile = Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory() +  "/Assets/" +  trackable.getId()+"/completed.txt");
+            File checkFile = Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory() +  "/Assets/" +  trackable.getId() + "/completed.txt");
             if (checkFile.exists()) {
                 checkFile.delete();
             }

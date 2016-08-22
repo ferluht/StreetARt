@@ -37,12 +37,12 @@ import java.util.ArrayList;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener,
-    JSONParserInterface, CMSContentManagementInterface {
+        CMSContentManagementInterface {
 
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
+    private Location mLastLocation, lastDownloadLocation;
     private Marker marker;
     private boolean flag = true;
 
@@ -50,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements
 
     private JSONParser jsonParser;
 
-    private CMSContentManagement contentManager = new CMSContentManagement(this,this);
+    private CMSContentManagement contentManager;
 
     @Override
     public void setUpTrackers(CMSTrackable[] trackers) {
@@ -69,6 +69,10 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        lastDownloadLocation = new Location("null location");
+        lastDownloadLocation.setLatitude(0);
+        lastDownloadLocation.setLongitude(0);
 /*
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -163,6 +167,16 @@ public class MapsActivity extends FragmentActivity implements
     public void onLocationChanged(Location location) {
         mLastLocation = location;
 
+        double lat = mLastLocation.getLatitude();
+        double lng = mLastLocation.getLongitude();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 17));
+
+        if(lastDownloadLocation.distanceTo(mLastLocation) > 100){
+            lastDownloadLocation = mLastLocation;
+            CMSContentManagement newContent = new CMSContentManagement(this, this, mLastLocation);
+            newContent.getObjectsNear();
+        }
+
         //remove previous current location Marker
         /*if (marker != null){
             marker.remove();
@@ -175,15 +189,8 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
-    public void getObjectsNear(View view){
-        //fileDownloadInformation = new ArrayList<CMSFileDownloadInformation>();
-        double lat = mLastLocation.getLatitude();
-        double lng = mLastLocation.getLongitude();
-        new JSONParser(this).execute("http://api.arreality.me/?act=get_obj_near&lat=" + Double.toString(lat) + "&lng=" + Double.toString(lng) + "&rad=5000");
-    }
-
     @Override
-    public void jsonFinishedDownloading(JSONObject jsonObject) {
+    public void setUpMapMarkers(JSONObject jsonObject){
         try{
             JSONArray tempJSONArray = (JSONArray) jsonObject.get("results");
             for (int i = 0; i < tempJSONArray.length(); i++) {
@@ -192,29 +199,12 @@ public class MapsActivity extends FragmentActivity implements
                 double lng = (double) tempJSON.get("lng");
                 String name = (String) tempJSON.get("name");
                 map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
-                                .title(name));
+                        .title(name));
                 //addFileDownloadInformation(tempJSON);
 
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        /*
-        downloadedJSON= new JSONObject();
-        downloadedJSON = jsonObject;
-        localJSON = CMSUtilityFunctions.getLocalJSON();
-        addFileDownloadInformationFromJSON();
-
-        if (fileDownloadInformation.size() > 0 ) {
-            downloadsManager.downloadTrackables(fileDownloadInformation, context, downloadedJSON);
-        }
-        else {
-            finishedDownload();
-        }*/
-    }
-
-    @Override
-    public void couldNotDownloadJSON() {
-        //contentManagementInferace.cannotDownload();
     }
 }
