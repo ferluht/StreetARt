@@ -93,16 +93,14 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, FullscreenAR.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_arts) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_updates) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_favorite) {
 
         }
 
