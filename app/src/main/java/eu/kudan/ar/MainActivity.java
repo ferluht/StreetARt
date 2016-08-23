@@ -21,6 +21,7 @@ import eu.kudan.kudan.ARAPIKey;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private CMSTrackable[] trackers;
     public static String packageName;
     //AIzaSyBVriLOpZkgSltkpMUPBFE_Y2fagvxSLy4
     @Override
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, FullscreenAR.class);
+            intent.putExtra("trackables", trackers);
             startActivity(intent);
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
