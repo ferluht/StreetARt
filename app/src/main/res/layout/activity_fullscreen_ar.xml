@@ -9,20 +9,4 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="eu.kudan.ar.FullscreenAR">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Arbi Track"
-        android:id="@+id/lockButton"
-        android:onClick="lockPosition"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:paddingLeft="30dp"
-        android:paddingTop="20dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="20dp" />
-
 </RelativeLayout>

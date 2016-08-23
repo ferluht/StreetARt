@@ -37,7 +37,7 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
 
     @Override
     public void didTrack(ARImageTrackable arImageTrackable) {
-        
+
     }
 
     @Override
