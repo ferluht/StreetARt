@@ -87,10 +87,12 @@ public class CMSContentManagement implements CMSDownloadManagerInterface, JSONPa
 
             if (tempJSON.get("augmentationType").equals("model")) {
                 CMSFileDownloadInformation modelFileDownloadinInformation = new CMSFileDownloadInformation();
+                CMSFileDownloadInformation pictureFileDownloadinInformation = new CMSFileDownloadInformation();
                 CMSFileDownloadInformation textureFileDownloadinInformation = new CMSFileDownloadInformation();
 
                 fileDownloadInformation.add(modelFileDownloadinInformation.initModelWithJSON(tempJSON));
-                fileDownloadInformation.add(textureFileDownloadinInformation.initPictureWithJSON(tempJSON));
+                fileDownloadInformation.add(pictureFileDownloadinInformation.initPictureWithJSON(tempJSON));
+                fileDownloadInformation.add(textureFileDownloadinInformation.initTextureWithJSON(tempJSON));
             }
 
             if (tempJSON.get("augmentationType").equals("video")) {

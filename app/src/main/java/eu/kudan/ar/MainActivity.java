@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity
 
     private CMSTrackable[] trackers;
     public static String packageName;
-    //AIzaSyBVriLOpZkgSltkpMUPBFE_Y2fagvxSLy4
+    static final int GET_TRACKABLES = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,20 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == GET_TRACKABLES) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -93,11 +108,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(MainActivity.this, FullscreenAR.class);
-            intent.putExtra("trackables", trackers);
             startActivity(intent);
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, GET_TRACKABLES);
         } else if (id == R.id.nav_arts) {
 
         } else if (id == R.id.nav_updates) {

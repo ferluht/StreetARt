@@ -34,6 +34,25 @@ public class CMSFileDownloadInformation
         return this;
     }
 
+    public CMSFileDownloadInformation initTextureWithJSON(JSONObject jsonObject)
+    {
+        try
+        {
+            fileId = (int) jsonObject.get("id");
+            downloadSource = url + jsonObject.get("universe") +
+                    "&fil=" + Integer.toString(fileId) + "_texture.png";
+            fileTitle = Integer.toString(fileId) + "_texture.png";
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        startInit();
+
+        return this;
+    }
+
     public CMSFileDownloadInformation initVideoWithJSON(JSONObject jsonObject) {
         try {
             fileId = (int) jsonObject.get("id");

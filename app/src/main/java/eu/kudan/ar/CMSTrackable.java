@@ -17,6 +17,10 @@ public class CMSTrackable implements Parcelable{
     private String augmentationFilePath;
     private String markerFileName;
     private String augmentationFileName;
+    private String textureFilePath;
+    private String imageNodeFilePath;
+    private String textureFileName;
+    private String imageNodeFileName;
     private String lastUpdated;
     private int augmentationRoatation;
     private int displayFade;
@@ -25,8 +29,6 @@ public class CMSTrackable implements Parcelable{
     private Boolean augmentationComplete;
     private Boolean markerComplete;
     private String augmentationType;
-
-
 
     public CMSTrackable initWithJSON(JSONObject jsonObject) {
 
@@ -46,17 +48,21 @@ public class CMSTrackable implements Parcelable{
 
             if (jsonObject.get("augmentationType").equals("model")) {
                 augmentationFileName = id + ".jet";
+                imageNodeFileName = id + ".jpg";
+                textureFileName = id + "_texture.png";
+                imageNodeFilePath = String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory()+ "/Assets/" + tId +"/" + imageNodeFileName));
+                textureFilePath = String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory()+ "/Assets/" + tId +"/" + textureFileName));
             }
 
             if (jsonObject.get("augmentationType").equals("picture")) {
-                augmentationFileName = id + ".jpg";
+                augmentationFileName = id + ".png";
             }
 
             /*lastUpdated = (String) jsonObject.get("lastUpdated");
             augmentationRoatation = (int)jsonObject.get("augmentationRotation");
             fillMarker = (int) jsonObject.get("fillMarker");*/
             markerFilePath = String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory() +  "/Assets/" + tId +"/" + markerFileName));
-            augmentationFilePath =String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory()+ "/Assets/" + tId +"/" + augmentationFileName));
+            augmentationFilePath = String.valueOf (Environment.getExternalStoragePublicDirectory(CMSUtilityFunctions.getRootFolderDirectory()+ "/Assets/" + tId +"/" + augmentationFileName));
             /*displayFade = (int) jsonObject.get("displayFade");
             resetTime = (int) jsonObject.get("resetTime");*/
             augmentationType = (String) jsonObject.get("augmentationType");
@@ -103,6 +109,22 @@ public class CMSTrackable implements Parcelable{
 
     public String getMarkerFileName() {
         return markerFileName;
+    }
+
+    public String getTextureFileName() {
+        return textureFileName;
+    }
+
+    public String getImageNodeFileName() {
+        return imageNodeFileName;
+    }
+
+    public String getTextureFilePath() {
+        return textureFilePath;
+    }
+
+    public String getImageNodeFilePath() {
+        return imageNodeFilePath;
     }
 
     public void setMarkerFileName(String markerFileName) {
