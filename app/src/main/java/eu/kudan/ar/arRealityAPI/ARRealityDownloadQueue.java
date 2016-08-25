@@ -21,8 +21,9 @@ public class ARRealityDownloadQueue extends AsyncTask<Void, Void, Void>
         this.arRealityAssets = new ArrayList<ARRealityAsset>();
     }
 
-    public void addAssetToQueue(ARRealityAsset tempAsset){
-        arRealityAssets.add(tempAsset);
+    public void addAssetsToQueue(List<ARRealityAsset> tempAssets){
+        for(ARRealityAsset tempAsset : tempAssets)
+            arRealityAssets.add(tempAsset);
     }
 
     private void startDownload(ARRealityAsset tempAsset){
@@ -55,6 +56,7 @@ public class ARRealityDownloadQueue extends AsyncTask<Void, Void, Void>
     @Override
     public void successfullyDownloaded(ARRealityAsset arRealityAsset) {
         arRealityAssets.remove(arRealityAsset);
+        if(arRealityAssets.isEmpty()) arRealityDownloadQueueInterface.allDownloaded();
         //else startDownload(arRealityAsset);
     }
 }

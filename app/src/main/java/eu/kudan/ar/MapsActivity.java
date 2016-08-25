@@ -169,4 +169,9 @@ public class MapsActivity extends FragmentActivity implements
                     .title(tempObject.getName()));
         }
     }
+
+    @Override
+    public void objectsUpdated(List<ARRealityObject> arRealityObjects) {
+
+    }
 }

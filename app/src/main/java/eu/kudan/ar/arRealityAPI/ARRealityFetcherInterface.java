@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface ARRealityFetcherInterface {
     public void setUpMapMarkers(List<ARRealityObject> arRealityObjects);
+    public void objectsUpdated(List<ARRealityObject> arRealityObjects);
 }

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import eu.kudan.ar.ServiceGenerator;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +34,11 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
             // todo change the file location/name according to your needs
-            File thisAsset = Environment.getExternalStoragePublicDirectory(arRealityAsset.filePath + File.separator + arRealityAsset.fileName);
+            File folder = new File(arRealityAsset.filePath);
+            folder.mkdirs();
+
+            File thisAsset = new File(arRealityAsset.filePath
+                    + File.separator + arRealityAsset.fileName);
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -84,9 +87,9 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        final ARRealityClient arRealityClient = ServiceGenerator.createService(ARRealityClient.class);
+        final ARRealityClient arRealityClient = ARRealityServiceGenerator.createService(ARRealityClient.class);
 
-        Call<ResponseBody> call = arRealityClient.downloadFile(arRealityAsset.downloadUrl);
+        Call<ResponseBody> call = arRealityClient.downloadFile(arRealityAsset.fileName);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
