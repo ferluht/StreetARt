@@ -42,7 +42,7 @@ public class CMSContentManagement implements CMSDownloadManagerInterface, JSONPa
     public void getObjectsNear(){
         double lat = mCurrentLocation.getLatitude();
         double lng = mCurrentLocation.getLongitude();
-        jsonParser.execute("http://api.arreality.me/?act=get_obj_near&lat=" + Double.toString(lat) + "&lng=" + Double.toString(lng) + "&rad=500");
+        jsonParser.execute("http://api.arreality.me/objects?lat=" + Double.toString(lat) + "&lng=" + Double.toString(lng) + "&rad=500");
     }
 
     // Creates file download information from downloaded json, if the file has been updated

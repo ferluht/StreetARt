@@ -1,16 +1,11 @@
 package eu.kudan.ar;
 
-import android.*;
 import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,50 +15,28 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
-import java.util.ArrayList;
+import eu.kudan.ar.arRealityAPI.ARRealityFetcher;
+import eu.kudan.ar.arRealityAPI.ARRealityFetcherInterface;
+import eu.kudan.ar.arRealityAPI.ARRealityObject;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener,
-        CMSContentManagementInterface {
+        ARRealityFetcherInterface {
 
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation, lastDownloadLocation;
-    private Marker marker;
-    private boolean flag = true;
-
-    private double lat, lng;
-
-    private JSONParser jsonParser;
 
     private CMSContentManagement contentManager;
-
-    @Override
-    public void setUpTrackers(CMSTrackable[] trackers) {
-        //Intent intent = new Intent(MapsActivity.this, CMSARView.class);
-        //intent.putExtra("trackables", trackers);
-        //startActivity(intent);
-    }
-
-
-    @Override
-    public void cannotDownload() {
-        //displayCantDownload();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,8 +146,7 @@ public class MapsActivity extends FragmentActivity implements
 
         if(lastDownloadLocation.distanceTo(mLastLocation) > 100){
             lastDownloadLocation = mLastLocation;
-            CMSContentManagement newContent = new CMSContentManagement(this, this, mLastLocation);
-            newContent.getObjectsNear();
+            (new ARRealityFetcher(this, mLastLocation)).execute();
         }
 
         //remove previous current location Marker
@@ -190,21 +162,11 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void setUpMapMarkers(JSONObject jsonObject){
-        try{
-            JSONArray tempJSONArray = (JSONArray) jsonObject.get("results");
-            for (int i = 0; i < tempJSONArray.length(); i++) {
-                JSONObject tempJSON = (JSONObject) tempJSONArray.get(i);
-                double lat = (double) tempJSON.get("lat");
-                double lng = (double) tempJSON.get("lng");
-                String name = (String) tempJSON.get("name");
-                map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
-                        .title(name));
-                //addFileDownloadInformation(tempJSON);
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+    public void setUpMapMarkers(List<ARRealityObject> arRealityObjects) {
+        for (int i = 0; i < arRealityObjects.size(); i++) {
+            ARRealityObject tempObject = arRealityObjects.get(i);
+            map.addMarker(new MarkerOptions().position(new LatLng(tempObject.getLat(), tempObject.getLng()))
+                    .title(tempObject.getName()));
         }
     }
 }

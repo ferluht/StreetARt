@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.InputStream;
+
 import eu.kudan.kudan.ARAPIKey;
 
 public class MainActivity extends AppCompatActivity
@@ -23,7 +25,23 @@ public class MainActivity extends AppCompatActivity
 
     private CMSTrackable[] trackers;
     public static String packageName;
-    static final int GET_TRACKABLES = 1;
+    static final int GET_TRACKABLES = 0;
+    private ACTBUTTON_STATE actbutton_state;
+
+    //Tracking enum
+    enum ACTBUTTON_STATE {
+        ACTB_SELECT_MARKER(1),
+        ACTB_SELECT_IMAGE(2);
+
+        private final int value;
+        private ACTBUTTON_STATE(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +54,7 @@ public class MainActivity extends AppCompatActivity
         key.setAPIKey("GAWQE-F9AQU-2G87F-8HKED-Q7BTG-TY29G-RV85A-XN3ZP-A9KGM-E8LB6-VC2XW-VTKAK-ANJLG-2P8NX-UZMAH-Q");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(onActButtClick);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,6 +65,37 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    View.OnClickListener onActButtClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(actbutton_state.equals(ACTBUTTON_STATE.ACTB_SELECT_MARKER)) {
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
+
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                startActivityForResult(chooserIntent, ACTBUTTON_STATE.ACTB_SELECT_MARKER.getValue());
+            }
+
+            if(actbutton_state.equals(ACTBUTTON_STATE.ACTB_SELECT_IMAGE)) {
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
+
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                startActivityForResult(chooserIntent, ACTBUTTON_STATE.ACTB_SELECT_IMAGE.getValue());
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -98,6 +141,35 @@ public class MainActivity extends AppCompatActivity
                 // Do something with the contact here (bigger example below)
             }
         }
+
+        /*if (requestCode == ACTBUTTON_STATE.ACTB_SELECT_MARKER.getValue()) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+                if (data == null) {
+                    //Display an error
+                    return;
+                }
+                InputStream inputStream = context.getContentResolver().openInputStream(data.getData());
+                //Now you can do whatever you want with your inpustream, save it as file, upload to a server, decode a bitmap...
+                // Do something with the contact here (bigger example below)
+            }
+        }
+
+        if (requestCode == ACTBUTTON_STATE.ACTB_SELECT_IMAGE.getValue()) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }*/
+    }
+
+    public void postFile(String path){
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

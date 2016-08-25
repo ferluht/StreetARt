@@ -13,15 +13,14 @@ public class CMSFileDownloadInformation
     private Boolean downloadIscomplete;
     private long taskIdentifier;
 
-    private static String url = "http://api.arreality.me/?act=load_asset&uni=";
+    private static String url = "http://api.arreality.me/download/";
 
     public CMSFileDownloadInformation initMarkerWithJSON(JSONObject jsonObject)
     {
         try
         {
             fileId = (int) jsonObject.get("id");
-            downloadSource = url + jsonObject.get("universe") +
-                    "&fil=" + Integer.toString(fileId) + ".KARMarker";
+            downloadSource = url + Integer.toString(fileId) + ".KARMarker";
             fileTitle = Integer.toString(fileId) + ".KARMarker";
         }
         catch (JSONException e)
@@ -39,8 +38,7 @@ public class CMSFileDownloadInformation
         try
         {
             fileId = (int) jsonObject.get("id");
-            downloadSource = url + jsonObject.get("universe") +
-                    "&fil=" + Integer.toString(fileId) + "_texture.png";
+            downloadSource = url + Integer.toString(fileId) + "_texture.png";
             fileTitle = Integer.toString(fileId) + "_texture.png";
         }
         catch (JSONException e)
@@ -56,8 +54,7 @@ public class CMSFileDownloadInformation
     public CMSFileDownloadInformation initVideoWithJSON(JSONObject jsonObject) {
         try {
             fileId = (int) jsonObject.get("id");
-            downloadSource = url + jsonObject.get("universe") +
-                    "&fil=" + Integer.toString(fileId) + ".mp4";
+            downloadSource = url + Integer.toString(fileId) + ".mp4";
             fileTitle = Integer.toString(fileId) + ".mp4";
 
         }
@@ -73,8 +70,7 @@ public class CMSFileDownloadInformation
     public CMSFileDownloadInformation initPictureWithJSON(JSONObject jsonObject) {
         try {
             fileId = (int) jsonObject.get("id");
-            downloadSource = url + jsonObject.get("universe") +
-                    "&fil=" + Integer.toString(fileId) + ".jpg";
+            downloadSource = url + Integer.toString(fileId) + ".jpg";
             fileTitle = Integer.toString(fileId) + ".jpg";
 
         }
@@ -90,8 +86,7 @@ public class CMSFileDownloadInformation
     public CMSFileDownloadInformation initModelWithJSON(JSONObject jsonObject) {
         try {
             fileId = (int) jsonObject.get("id");
-            downloadSource = url + jsonObject.get("universe") +
-                    "&fil=" + Integer.toString(fileId) + ".jet";
+            downloadSource = url + Integer.toString(fileId) + ".jet";
             fileTitle = Integer.toString(fileId) + ".jet";
 
         }
