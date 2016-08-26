@@ -42,4 +42,16 @@ public interface ARRealityClient {
             @Query("lng") double lng,
             @Query("type") String type
     );
+
+    @Multipart
+    @POST("/upload")
+    Call<ResponseBody> uploadObject(
+            @Part MultipartBody.Part marker,
+            @Part MultipartBody.Part object,
+            @Part MultipartBody.Part texture,
+            @Query("name") String name,
+            @Query("lat") double lat,
+            @Query("lng") double lng,
+            @Query("type") String type
+    );
 }

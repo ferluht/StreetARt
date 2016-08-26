@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import eu.kudan.ar.arRealityAPI.ARRealityImageUploader;
+import eu.kudan.ar.arRealityAPI.ARRealityObjectUploader;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -317,9 +318,9 @@ public class UploadArtActivity extends FragmentActivity implements
                 break;
 
             case "model":
-                /*new ARRealityObjectUploader(this, markerFilePath, objectFilePath,
-                        textureFilePath, currentLocation).execute();
-                break;*/
+                new ARRealityObjectUploader(markerFilePath, objectFilePath,
+                        textureFilePath, currentLocation, editText.getText().toString()).execute();
+                break;
 
             default:
                 break;
