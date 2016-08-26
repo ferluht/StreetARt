@@ -38,9 +38,9 @@
         <activity
             android:name=".FullscreenAR"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="fullSensor"
             android:label="@string/title_activity_fullscreen_ar"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="fullSensor"
             android:theme="@style/FullscreenTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -65,10 +65,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.kudan.ar.MainActivity" />
         </activity>
-
-        <activity android:name=".ARCameraViewActivity"
+        <activity
+            android:name=".ARCameraViewActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="fullSensor"></activity>
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".UploadArtActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_upload_art"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="eu.kudan.ar.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

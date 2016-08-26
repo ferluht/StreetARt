@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/objectUploadButton"
+            android:layout_width="@dimen/pick_buttons"
+            android:layout_height="@dimen/pick_buttons"
+            android:src="@drawable/upload_image"
+            android:background="@null"
+            android:onClick="onObjectUploadClick"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="294dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/pick_object_description"
+            android:id="@+id/PickObjectText"
+            android:textSize="40dp"
+            android:textAlignment="center"
+
+            android:singleLine="false"
+            android:layout_gravity="center_horizontal|bottom"
+            android:textStyle="bold"
+            android:layout_below="@+id/objectUploadButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/pick_texture_example"
+            android:id="@+id/textView5"
+            android:layout_marginTop="54dp"
+            android:textSize="30dp"
+            android:textStyle="italic"
+            android:layout_alignTop="@+id/PickObjectText"
+            android:layout_alignLeft="@+id/objectUploadButton"
+            android:layout_alignStart="@+id/objectUploadButton"
+            android:gravity="center_horizontal"
+            android:layout_alignRight="@+id/objectUploadButton"
+            android:layout_alignEnd="@+id/objectUploadButton" />
+    </RelativeLayout>
+
+</FrameLayout>

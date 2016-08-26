@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/upload_image_default" />
-    <item
+        android:drawable="@drawable/upload_image_pushed"
         android:state_pressed="true"
-        android:drawable="@drawable/upload_image_pushed" />
+         />
+    <item
+        android:drawable="@drawable/upload_image_default" />
 </selector>

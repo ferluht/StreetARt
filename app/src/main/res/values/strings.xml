@@ -12,5 +12,30 @@
 
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_maps1">Map1</string>
+
+    <string name="title_activity_upload_art">UploadArtActivity</string>
+    <string name="pick_marker_description">
+        Pick your target picture:
+    </string>
+    <string name="pick_marker_example">
+        e.g. image of a wall
+    </string>
+    <string name="welcome_text">
+        Welcome to StreetARt!
+    </string>
+    <string name="welcome_description">
+        It seems that you did not upload arts yet. Do you want to upload your art?
+    </string>
+    <string name="pick_object_description">
+        Pick your art:
+    </string>
+    <string name="pick_object_example">
+        image or model
+    </string>
+    <string name="pick_texture_description">
+        Pick texture for your art object:
+    </string>
+    <string name="pick_texture_example">
+        .png or .jpg
+    </string>
 </resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="223dp"
+        android:layout_height="66dp"
+        android:text="Ok, start!"
+        android:id="@+id/Start"
+        android:layout_marginBottom="50dip"
+        android:layout_gravity="center_horizontal|bottom"
+        android:onClick="StartWizard" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:id="@+id/welcome_logo"
+        android:src="@drawable/logo_big"
+        android:layout_gravity="center_horizontal|top" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Welcome to StreetARt"
+            android:id="@+id/textView6"
+            android:layout_gravity="center_horizontal|top"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:textColor="#dd7d00"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/welcome_description"
+            android:id="@+id/textView7"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_below="@+id/textView6"
+            android:layout_centerHorizontal="true"
+            android:textStyle="italic"
+            android:textSize="20dp"
+            android:textColor="#e49936" />
+    </RelativeLayout>
+</FrameLayout>

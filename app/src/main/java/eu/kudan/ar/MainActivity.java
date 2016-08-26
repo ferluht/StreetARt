@@ -31,21 +31,6 @@ public class MainActivity extends AppCompatActivity
     private CMSTrackable[] trackers;
     public static String packageName;
     static final int GET_TRACKABLES = 0;
-    static final int SELECT_MARKER = 1;
-    static final int SELECT_OBJECT = 2;
-
-    public void onMarkerUploadClick(View view) {
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, SELECT_MARKER);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,28 +109,6 @@ public class MainActivity extends AppCompatActivity
                 // Do something with the contact here (bigger example below)
             }
         }
-
-        if (requestCode == SELECT_MARKER) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                if (data == null) {
-                    //Display an error
-                    return;
-                }
-                Uri selectedImage = data.getData();
-                new ARRealityUploader(this, selectedImage).execute();
-            }
-        }
-
-        if (requestCode == SELECT_OBJECT) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
-
-                // Do something with the contact here (bigger example below)
-            }
-        }
     }
 
     public void postFile(String path){
@@ -165,7 +128,9 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivityForResult(intent, GET_TRACKABLES);
         } else if (id == R.id.nav_arts) {
-
+            Intent intent = new Intent(MainActivity.this, UploadArtActivity.class);
+            intent.putExtra("NO_EXISTING_OBJECTS", true);
+            startActivity(intent);
         } else if (id == R.id.nav_updates) {
 
         } else if (id == R.id.nav_favorite) {
