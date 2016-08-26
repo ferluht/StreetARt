@@ -27,8 +27,6 @@ import eu.kudan.kudan.ARAPIKey;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private CMSTrackable[] trackers;
-    public static String packageName;
     static final int GET_TRACKABLES = 0;
 
     @Override

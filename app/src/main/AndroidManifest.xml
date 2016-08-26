@@ -66,10 +66,6 @@
                 android:value="eu.kudan.ar.MainActivity" />
         </activity>
         <activity
-            android:name=".ARCameraViewActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="fullSensor" />
-        <activity
             android:name=".UploadArtActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_upload_art"
