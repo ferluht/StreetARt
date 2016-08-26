@@ -8,12 +8,12 @@
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/markerUploadButton"
+            android:id="@+id/textureUploadButton"
             android:layout_width="@dimen/pick_buttons"
             android:layout_height="@dimen/pick_buttons"
-            android:src="@drawable/upload_marker_default"
+            android:src="@drawable/upload_texture"
             android:background="@null"
-            android:onClick="onMarkerUploadClick"
+            android:onClick="onTextureUploadClick"
             android:layout_gravity="center"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -23,15 +23,15 @@
             android:layout_width="match_parent"
             android:layout_height="294dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/pick_marker_description"
-            android:id="@+id/PickMarkerText"
+            android:text="@string/pick_texture_description"
+            android:id="@+id/PickTextureText"
             android:textSize="40dp"
             android:textAlignment="center"
 
             android:singleLine="false"
             android:layout_gravity="center_horizontal|bottom"
             android:textStyle="bold"
-            android:layout_below="@+id/markerUploadButton"
+            android:layout_below="@+id/textureUploadButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -39,14 +39,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/pick_marker_example"
+            android:text="@string/pick_texture_example"
             android:id="@+id/textView5"
             android:layout_marginTop="54dp"
             android:textSize="30dp"
             android:textStyle="italic"
-            android:layout_alignTop="@+id/PickMarkerText"
-            android:layout_alignLeft="@+id/markerUploadButton"
-            android:layout_alignStart="@+id/markerUploadButton" />
+            android:layout_alignTop="@+id/PickTextureText"
+            android:layout_alignLeft="@+id/textureUploadButton"
+            android:layout_alignStart="@+id/textureUploadButton"
+            android:layout_alignRight="@+id/textureUploadButton"
+            android:layout_alignEnd="@+id/textureUploadButton"
+            android:gravity="center_horizontal" />
     </RelativeLayout>
 
 </FrameLayout>

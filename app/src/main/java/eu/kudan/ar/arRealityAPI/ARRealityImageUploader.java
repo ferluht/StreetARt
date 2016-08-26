@@ -2,6 +2,7 @@ package eu.kudan.ar.arRealityAPI;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -20,27 +21,18 @@ import retrofit2.Response;
 /**
  * Created by ferluht on 25.08.2016.
  */
-public class ARRealityUploader extends AsyncTask<Void, Void, Void> {
+public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
 
-    private Uri uri;
-    private Context context;
+    String markerFilePath, imageFilePath;
+    Location currLocation;
+    String name;
 
-    public ARRealityUploader(Context context, Uri tUri){
-        this.uri = tUri;
-        this.context = context;
-    }
-
-    private String getFile(Uri uri){
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-        Cursor cursor = context.getContentResolver().query(uri,
-                filePathColumn, null, null, null);
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
-        cursor.close();
-        return picturePath;
+    public ARRealityImageUploader(String tMarkerFilePath, String tImageFilePath,
+                                  Location tCurrentLocation, String tName){
+        this.markerFilePath = tMarkerFilePath;
+        this.imageFilePath = tImageFilePath;
+        this.currLocation = tCurrentLocation;
+        this.name = tName;
     }
 
     @Override
@@ -51,15 +43,23 @@ public class ARRealityUploader extends AsyncTask<Void, Void, Void> {
 
         // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
         // use the FileUtils to get the actual file by uri
-        File file = new File(getFile(uri));
-
+        File marker = new File(markerFilePath);
         // create RequestBody instance from file
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
+        RequestBody requestMarker =
+                RequestBody.create(MediaType.parse("multipart/form-data"), marker);
         // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        MultipartBody.Part markerBody =
+                MultipartBody.Part.createFormData("marker", marker.getName(), requestMarker);
+
+        File image = new File(imageFilePath);
+        // create RequestBody instance from file
+        RequestBody requestImage =
+                RequestBody.create(MediaType.parse("multipart/form-data"), image);
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part imageBody =
+                MultipartBody.Part.createFormData("image", image.getName(), requestImage);
+
+
 
         // add another part within the multipart request
         String descriptionString = "hello, this is description speaking";
@@ -68,7 +68,9 @@ public class ARRealityUploader extends AsyncTask<Void, Void, Void> {
                         MediaType.parse("multipart/form-data"), descriptionString);
 
         // finally, execute the request
-        Call<ResponseBody> call = service.upload(description, body);
+        Call<ResponseBody> call = service.uploadImage(markerBody, imageBody, name,
+                currLocation.getLatitude(), currLocation.getLongitude(), "image");
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,

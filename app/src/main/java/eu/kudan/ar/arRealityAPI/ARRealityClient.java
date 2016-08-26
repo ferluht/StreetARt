@@ -34,12 +34,12 @@ public interface ARRealityClient {
 
     @Multipart
     @POST("/upload")
-    Call<ResponseBody> upload(
-            @Part("description") RequestBody description,
-            @Part MultipartBody.Part file
-            /*@Query("name") String name,
+    Call<ResponseBody> uploadImage(
+            @Part MultipartBody.Part marker,
+            @Part MultipartBody.Part image,
+            @Query("name") String name,
             @Query("lat") double lat,
             @Query("lng") double lng,
-            @Query("type") String type*/
+            @Query("type") String type
     );
 }

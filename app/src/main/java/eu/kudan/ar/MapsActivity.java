@@ -36,8 +36,6 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation, lastDownloadLocation;
 
-    private CMSContentManagement contentManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +44,6 @@ public class MapsActivity extends FragmentActivity implements
         lastDownloadLocation = new Location("null location");
         lastDownloadLocation.setLatitude(0);
         lastDownloadLocation.setLongitude(0);
-/*
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
     }
 
     @Override

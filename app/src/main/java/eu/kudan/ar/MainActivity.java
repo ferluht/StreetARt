@@ -22,7 +22,6 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import eu.kudan.ar.arRealityAPI.ARRealityUploader;
 import eu.kudan.kudan.ARAPIKey;
 
 public class MainActivity extends AppCompatActivity

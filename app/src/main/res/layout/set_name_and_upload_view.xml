@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Enter your art's name"
+            android:id="@+id/textView6"
+            android:layout_gravity="center_horizontal|top"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:textColor="#dd7d00"
+            android:layout_marginTop="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="539dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_below="@+id/nameText"
+            android:layout_alignStart="@+id/nameText"
+            android:layout_alignEnd="@+id/nameText"
+            android:nestedScrollingEnabled="false" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameText"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/textView6"
+            android:layout_alignStart="@+id/textView6" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            android:id="@+id/button"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="62dp"
+            android:onClick="OnUploadClick" />
+    </RelativeLayout>
+
+</FrameLayout>
