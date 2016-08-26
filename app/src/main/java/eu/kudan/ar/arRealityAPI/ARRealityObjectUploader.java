@@ -75,7 +75,7 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
 
         // finally, execute the request
         Call<ResponseBody> call = service.uploadObject(markerBody, objectBody, textureBody, name,
-                currLocation.getLatitude(), currLocation.getLongitude(), "image");
+                currLocation.getLatitude(), currLocation.getLongitude(), "model");
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
