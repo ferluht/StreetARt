@@ -2,10 +2,15 @@ package eu.kudan.ar;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,15 +40,24 @@ public class MapsActivity extends FragmentActivity implements
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation, lastDownloadLocation;
+    ProgressBar pr;
+    ImageView backgroundImg;
+    SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        //findViewById(R.id);
 
         lastDownloadLocation = new Location("null location");
         lastDownloadLocation.setLatitude(0);
         lastDownloadLocation.setLongitude(0);
+
+        pr = (ProgressBar) findViewById(R.id.downloadProgress);
+
+        backgroundImg = (ImageView) findViewById(R.id.blurView);
+        backgroundImg.setBackgroundColor(Color.argb(200,0,0,0));
     }
 
     @Override
@@ -58,7 +72,7 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         if (map == null) {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+            mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }
@@ -110,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        //mLocationRequest.setSmallestDisplacement(0.1F);
+        mLocationRequest.setSmallestDisplacement(500F);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -140,7 +154,9 @@ public class MapsActivity extends FragmentActivity implements
 
         if(lastDownloadLocation.distanceTo(mLastLocation) > 100){
             lastDownloadLocation = mLastLocation;
-            (new ARRealityFetcher(this, mLastLocation)).execute();
+            backgroundImg.setBackgroundColor(Color.argb(200,0,0,0));
+
+            (new ARRealityFetcher(this, this, mLastLocation)).execute();
         }
 
         //remove previous current location Marker
@@ -162,10 +178,19 @@ public class MapsActivity extends FragmentActivity implements
             map.addMarker(new MarkerOptions().position(new LatLng(tempObject.getLat(), tempObject.getLng()))
                     .title(tempObject.getName()));
         }
+
     }
 
     @Override
     public void objectsUpdated(List<ARRealityObject> arRealityObjects) {
+        pr.setVisibility(View.INVISIBLE);
 
+        backgroundImg.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDownloadProgressChanged(int progress) {
+        /*ProgressBar pr = (ProgressBar) findViewById(R.id.downloadProgress);*/
+        //pr.incrementProgressBy(1);
     }
 }

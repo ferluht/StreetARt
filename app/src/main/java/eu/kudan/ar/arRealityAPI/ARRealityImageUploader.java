@@ -26,13 +26,23 @@ public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
     String markerFilePath, imageFilePath;
     Location currLocation;
     String name;
+    String textureType;
+    private ARRealityImageUploaderInterface arRealityImageUploaderInterface;
 
-    public ARRealityImageUploader(String tMarkerFilePath, String tImageFilePath,
+    private static String getFileExtension(String fileName) {
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".")+1);
+        else return "";
+    }
+
+    public ARRealityImageUploader(ARRealityImageUploaderInterface listener, String tMarkerFilePath, String tImageFilePath,
                                   Location tCurrentLocation, String tName){
         this.markerFilePath = tMarkerFilePath;
         this.imageFilePath = tImageFilePath;
         this.currLocation = tCurrentLocation;
         this.name = tName;
+        this.textureType = getFileExtension(tImageFilePath);
+        arRealityImageUploaderInterface = listener;
     }
 
     @Override
@@ -60,22 +70,16 @@ public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
                 MultipartBody.Part.createFormData("image", image.getName(), requestImage);
 
 
-
-        // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
-        RequestBody description =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), descriptionString);
-
         // finally, execute the request
         Call<ResponseBody> call = service.uploadImage(markerBody, imageBody, name,
-                currLocation.getLatitude(), currLocation.getLongitude(), "image");
+                currLocation.getLatitude(), currLocation.getLongitude(), "image", textureType);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    Response<ResponseBody> response) {
                 Log.v("Upload", "success");
+                arRealityImageUploaderInterface.onImageUploaded();
             }
 
             @Override
@@ -85,5 +89,10 @@ public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
         });
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+
     }
 }

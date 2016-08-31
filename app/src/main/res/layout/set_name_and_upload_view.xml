@@ -26,17 +26,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="539dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_below="@+id/nameText"
-            android:layout_alignStart="@+id/nameText"
-            android:layout_alignEnd="@+id/nameText"
-            android:nestedScrollingEnabled="false" />
-
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,6 +43,19 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="62dp"
             android:onClick="OnUploadClick" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/blurUploadView" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:id="@+id/uploadProgress"
+            android:name="downloadProgress"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:layout_height="50dp" />
     </RelativeLayout>
 
 </FrameLayout>

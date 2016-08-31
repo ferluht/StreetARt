@@ -36,4 +36,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.4.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    // compile 'com.j256.ormlite:ormlite-core:4.48'
+    // compile 'com.j256.ormlite:ormlite-android:4.48'
 }

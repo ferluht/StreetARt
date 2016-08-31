@@ -40,7 +40,8 @@ public interface ARRealityClient {
             @Query("name") String name,
             @Query("lat") double lat,
             @Query("lng") double lng,
-            @Query("type") String type
+            @Query("type") String type,
+            @Query("ttype") String ttype
     );
 
     @Multipart
@@ -52,6 +53,7 @@ public interface ARRealityClient {
             @Query("name") String name,
             @Query("lat") double lat,
             @Query("lng") double lng,
-            @Query("type") String type
+            @Query("type") String type,
+            @Query("ttype") String ttype
     );
 }

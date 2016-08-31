@@ -22,6 +22,13 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
     String markerFilePath, objectFilePath, textureFilePath;
     Location currLocation;
     String name;
+    String textureType;
+
+    private static String getFileExtension(String fileName) {
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".")+1);
+        else return "";
+    }
 
     public ARRealityObjectUploader(String tMarkerFilePath, String tObjectFilePath,
                                    String tTextureFilePath, Location tCurrentLocation,
@@ -30,6 +37,7 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
         this.objectFilePath = tObjectFilePath;
         this.textureFilePath = tTextureFilePath;
         this.currLocation = tCurrentLocation;
+        this.textureType = getFileExtension(tTextureFilePath);
         this.name = tName;
     }
 
@@ -66,16 +74,9 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
                 MultipartBody.Part.createFormData("texture", texture.getName(), requestTexture);
 
 
-
-        // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
-        RequestBody description =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), descriptionString);
-
         // finally, execute the request
         Call<ResponseBody> call = service.uploadObject(markerBody, objectBody, textureBody, name,
-                currLocation.getLatitude(), currLocation.getLongitude(), "model");
+                currLocation.getLatitude(), currLocation.getLongitude(), "model", textureType);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

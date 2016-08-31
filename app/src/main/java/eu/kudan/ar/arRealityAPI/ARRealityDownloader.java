@@ -22,10 +22,6 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
     private ARRealityDownloaderInterface arRealityDownloaderInterface;
     private ARRealityAsset arRealityAsset;
 
-    /*private void download(){
-
-    }*/
-
     public ARRealityDownloader(ARRealityDownloaderInterface inListener, ARRealityAsset tempAsset){
         this.arRealityDownloaderInterface = inListener;
         this.arRealityAsset = tempAsset;
@@ -37,8 +33,7 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
             File folder = new File(arRealityAsset.filePath);
             folder.mkdirs();
 
-            File thisAsset = new File(arRealityAsset.filePath
-                    + File.separator + arRealityAsset.fileName);
+            File thisAsset = new File(arRealityAsset.fullPath);
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -47,7 +42,7 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
                 byte[] fileReader = new byte[4096];
 
                 long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
+                arRealityAsset.percentDownloaded = 0;
 
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(thisAsset);
@@ -61,9 +56,11 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
 
                     outputStream.write(fileReader, 0, read);
 
-                    fileSizeDownloaded += read;
+                    /*arRealityAsset.percentDownloaded += (float)read/(float)fileSize*100.0;
 
-                    //Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    if(arRealityAsset.percentDownloaded < 100)
+                        arRealityDownloaderInterface.onDownloadProgressChanged(arRealityAsset);*/
+
                 }
 
                 outputStream.flush();
@@ -99,7 +96,11 @@ public class ARRealityDownloader extends AsyncTask <Void, Void, Void> {
 
                     arRealityAsset.downloaded = writeResponseBodyToDisk(response.body());
 
-                    if(arRealityAsset.downloaded) arRealityDownloaderInterface.successfullyDownloaded(arRealityAsset);
+                    if(arRealityAsset.downloaded) try {
+                        arRealityDownloaderInterface.successfullyDownloaded(arRealityAsset);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     else arRealityDownloaderInterface.failedToSaveFile(arRealityAsset);
                     //Log.d(TAG, "file download was a success? " + writtenToDisk);
                 } else {

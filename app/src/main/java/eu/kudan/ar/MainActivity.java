@@ -1,4 +1,5 @@
 package eu.kudan.ar;
+import eu.kudan.ar.R;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,17 +18,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
+import eu.kudan.ar.arRealityAPI.ARRealityFetcherInterface;
+import eu.kudan.ar.arRealityAPI.ARRealityObject;
 import eu.kudan.kudan.ARAPIKey;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener/*, ARRealityFetcherInterface*/{
 
     static final int GET_TRACKABLES = 0;
+    private List<ARRealityObject> arRealityObjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

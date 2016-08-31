@@ -1,45 +1,40 @@
 package eu.kudan.ar;
 
-import android.*;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.LocationSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import eu.kudan.ar.arRealityAPI.ARRealityImageUploader;
+import eu.kudan.ar.arRealityAPI.ARRealityImageUploaderInterface;
 import eu.kudan.ar.arRealityAPI.ARRealityObjectUploader;
 
 /**
@@ -48,7 +43,7 @@ import eu.kudan.ar.arRealityAPI.ARRealityObjectUploader;
  */
 public class UploadArtActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        PageFragmentInterface, LocationListener {
+        LocationListener, ARRealityImageUploaderInterface {
 
     static final String TAG = "myLogs";
     static final int PAGE_COUNT = 10;
@@ -66,6 +61,9 @@ public class UploadArtActivity extends FragmentActivity implements
     static final int SELECT_MARKER = 1;
     static final int SELECT_OBJECT = 2;
     static final int SELECT_TEXTURE = 3;
+
+    ImageView backgroundImg;
+    ProgressBar pr;
 
     private String markerFilePath, imageFilePath, objectFilePath, textureFilePath;
 
@@ -129,6 +127,19 @@ public class UploadArtActivity extends FragmentActivity implements
         return filePath;
     }
 
+    private String getFile(Uri uri){
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = this.getContentResolver().query(uri,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+        return picturePath;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_MARKER) {
@@ -140,7 +151,7 @@ public class UploadArtActivity extends FragmentActivity implements
                 }
                 Uri tUri = data.getData();
 
-                markerFilePath = getPathFromUri(tUri);
+                markerFilePath = getFile(tUri); //getPathFromUri(tUri);
 
                 ImageButton ib = (ImageButton) findViewById(R.id.markerUploadButton);
                 ib.setBackgroundResource(R.drawable.button_frame);
@@ -167,7 +178,7 @@ public class UploadArtActivity extends FragmentActivity implements
                 }
                 Uri tUri = data.getData();
 
-                textureFilePath = getPathFromUri(tUri);
+                textureFilePath = getFile(tUri); //getPathFromUri(tUri);
 
                 ImageButton ib = (ImageButton) findViewById(R.id.textureUploadButton);
                 ib.setBackgroundResource(R.drawable.button_frame);
@@ -190,9 +201,14 @@ public class UploadArtActivity extends FragmentActivity implements
 
                 Uri tUri = data.getData();
 
-                String tFilePath = getPathFromUri(tUri);
+                String tFilePath = getFile(tUri); //getPathFromUri(tUri);
 
                 String extension = tFilePath.substring(tFilePath.lastIndexOf(".") + 1);
+
+                /*if(tFilePath == ""){
+                    tFilePath = getFile(tUri);
+                    extension = tFilePath.substring(tFilePath.lastIndexOf(".") + 1);
+                }*/
 
                 if (imageExtensions.contains(extension)) {
                     ImageButton ib = (ImageButton) findViewById(R.id.objectUploadButton);
@@ -270,10 +286,10 @@ public class UploadArtActivity extends FragmentActivity implements
 
     public void onMarkerUploadClick(View view) {
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("*/*");
+        getIntent.setType("image/*");
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("*/*");
+        pickIntent.setType("image/*");
 
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
@@ -283,10 +299,10 @@ public class UploadArtActivity extends FragmentActivity implements
 
     public void onObjectUploadClick(View view) {
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("*/*");
+        getIntent.setType("image/*");
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("*/*");
+        pickIntent.setType("image/*");
 
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Object");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
@@ -307,13 +323,23 @@ public class UploadArtActivity extends FragmentActivity implements
         startActivityForResult(chooserIntent, SELECT_TEXTURE);
     }
 
+    public void onImageUploaded(){
+        pr.setVisibility(View.INVISIBLE);
+        backgroundImg.setVisibility(View.GONE);
+        this.finish();
+    }
+
     public void OnUploadClick(View view) {
 
         EditText editText = (EditText) findViewById(R.id.nameText);
 
         switch (augmentationType) {
             case "image":
-                new ARRealityImageUploader(markerFilePath, imageFilePath,
+                backgroundImg = (ImageView) findViewById(R.id.blurUploadView);
+                backgroundImg.setBackgroundColor(Color.argb(200,0,0,0));
+                pr = (ProgressBar) findViewById(R.id.uploadProgress);
+                pr.setVisibility(View.VISIBLE);
+                new ARRealityImageUploader(this, markerFilePath, imageFilePath,
                         currentLocation, editText.getText().toString()).execute();
                 break;
 
