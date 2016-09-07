@@ -26,6 +26,11 @@ public interface ARRealityClient {
             @Query("rad") double rad
     );
 
+    @GET("/object")
+    Call<List<ARRealityObject>> object(
+            @Query("id") int id
+    );
+
     //@Streaming
     @GET("/download/{file}")
     Call<ResponseBody> downloadFile(

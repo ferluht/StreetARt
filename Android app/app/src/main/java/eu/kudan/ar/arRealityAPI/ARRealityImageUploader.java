@@ -1,11 +1,7 @@
 package eu.kudan.ar.arRealityAPI;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
@@ -27,7 +23,7 @@ public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
     Location currLocation;
     String name;
     String textureType;
-    private ARRealityImageUploaderInterface arRealityImageUploaderInterface;
+    private ARRealityUploaderInterface arRealityUploaderInterface;
 
     private static String getFileExtension(String fileName) {
         if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
@@ -35,14 +31,14 @@ public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
         else return "";
     }
 
-    public ARRealityImageUploader(ARRealityImageUploaderInterface listener, String tMarkerFilePath, String tImageFilePath,
+    public ARRealityImageUploader(ARRealityUploaderInterface listener, String tMarkerFilePath, String tImageFilePath,
                                   Location tCurrentLocation, String tName){
         this.markerFilePath = tMarkerFilePath;
         this.imageFilePath = tImageFilePath;
         this.currLocation = tCurrentLocation;
         this.name = tName;
         this.textureType = getFileExtension(tImageFilePath);
-        arRealityImageUploaderInterface = listener;
+        arRealityUploaderInterface = listener;
     }
 
     @Override
@@ -79,7 +75,7 @@ public class ARRealityImageUploader extends AsyncTask<Void, Void, Void> {
             public void onResponse(Call<ResponseBody> call,
                                    Response<ResponseBody> response) {
                 Log.v("Upload", "success");
-                arRealityImageUploaderInterface.onImageUploaded();
+                arRealityUploaderInterface.onUploaded();
             }
 
             @Override

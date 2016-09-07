@@ -41,13 +41,25 @@ public class ARRealityFetcher extends AsyncTask<Void, Void, Void>
         ARRealityDBHelper mDatabaseHelper = new ARRealityDBHelper(context);
         SQLiteDatabase mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         mDatabaseHelper.dbFlush(mSqLiteDatabase);
+
+        arRealityClient = ARRealityServiceGenerator.createService(ARRealityClient.class);
+        call = arRealityClient.objects(mCurLoc.getLatitude(), mCurLoc.getLongitude(), 500);
+    }
+
+    public ARRealityFetcher(Context context, ARRealityFetcherInterface inListener, int id){
+        this.arRealityFetcherInterface = inListener;
+        this.context = context;
+
+        ARRealityDBHelper mDatabaseHelper = new ARRealityDBHelper(context);
+        SQLiteDatabase mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        mDatabaseHelper.dbFlush(mSqLiteDatabase);
+
+        arRealityClient = ARRealityServiceGenerator.createService(ARRealityClient.class);
+        call = arRealityClient.object(id);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-
-        arRealityClient = ARRealityServiceGenerator.createService(ARRealityClient.class);
-        call = arRealityClient.objects(mCurLoc.getLatitude(), mCurLoc.getLongitude(), 500);
 
         try {
             objects = call.execute().body();

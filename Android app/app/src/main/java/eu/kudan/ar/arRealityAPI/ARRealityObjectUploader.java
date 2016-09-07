@@ -1,10 +1,13 @@
 package eu.kudan.ar.arRealityAPI;
 
+import android.content.res.TypedArray;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -23,6 +26,7 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
     Location currLocation;
     String name;
     String textureType;
+    ARRealityUploaderInterface arRealityUploaderInterface;
 
     private static String getFileExtension(String fileName) {
         if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
@@ -30,7 +34,7 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
         else return "";
     }
 
-    public ARRealityObjectUploader(String tMarkerFilePath, String tObjectFilePath,
+    public ARRealityObjectUploader(ARRealityUploaderInterface arRealityUploaderInterface, String tMarkerFilePath, String tObjectFilePath,
                                    String tTextureFilePath, Location tCurrentLocation,
                                    String tName){
         this.markerFilePath = tMarkerFilePath;
@@ -39,6 +43,7 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
         this.currLocation = tCurrentLocation;
         this.textureType = getFileExtension(tTextureFilePath);
         this.name = tName;
+        this.arRealityUploaderInterface = arRealityUploaderInterface;
     }
 
     @Override
@@ -83,6 +88,13 @@ public class ARRealityObjectUploader extends AsyncTask<Void, Void, Void> {
             public void onResponse(Call<ResponseBody> call,
                                    Response<ResponseBody> response) {
                 Log.v("Upload", "success");
+                String resp = "";
+                try {
+                    resp = new String(response.body().bytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                arRealityUploaderInterface.onObjectUploaded(Integer.parseInt(resp));
             }
 
             @Override

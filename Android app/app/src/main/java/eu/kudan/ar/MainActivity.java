@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(intent, GET_TRACKABLES);
         } else if (id == R.id.nav_arts) {
             Intent intent = new Intent(MainActivity.this, UploadArtActivity.class);
-            intent.putExtra("NO_EXISTING_OBJECTS", true);
+            intent.putExtra("NO_EXISTING_OBJECTS", false);
             startActivity(intent);
         } else if (id == R.id.nav_updates) {
 

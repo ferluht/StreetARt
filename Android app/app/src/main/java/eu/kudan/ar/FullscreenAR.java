@@ -25,50 +25,47 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
     //private ARModelNode modelNode;
     private ARBITRACK_STATE arbitrack_state;
     private List<ARImageNode> arImageNodes;
+    private List<ARModelNode> arModelNodes;
 
     @Override
     public void didDetect(ARImageTrackable arImageTrackable) {
+            /*int id = Integer.parseInt(arImageTrackable.getName());
+            ARModelNode modelNode = arModelNodes.get(id - 1);
 
-        List<ARNode> arNodes = arImageTrackable.getWorld().getChildren();
-        for(ARNode arNode : arNodes) {
-            ARImageNode imageNode = arImageNodes.get(Integer.parseInt(arNode.getName()));
-            // Get ArbiTrack instance
             ARArbiTrack arArbiTrack = ARArbiTrack.getInstance();
             // Get model nodes position relative to camera
             Vector3f fullPos = arArbiTrack.getTargetNode().getFullTransform().mult(Vector3f.ZERO);
             // Get models position relative to ArbiTracks world.
             Vector3f posInArbiTrack = arArbiTrack.getWorld().getFullTransform().invert().mult(fullPos);
             // Get models orientation relative to ArbiTracks world.
-            Quaternion orInArbiTrack = arArbiTrack.getWorld().getFullOrientation().inverse().mult((imageNode.getFullOrientation()));
+            Quaternion orInArbiTrack = arArbiTrack.getWorld().getFullOrientation().inverse().mult((modelNode.getFullOrientation()));
             // Add the model node as a child of ArbiTrack
-            arArbiTrack.getWorld().addChild(imageNode);
+            arArbiTrack.getWorld().addChild(modelNode);
             // Change model nodes position to be relative to the marker nodes world
-            imageNode.setPosition(posInArbiTrack);
+            modelNode.setPosition(posInArbiTrack);
             // Change model nodes orientation to be relative to the marker nodes world
-            imageNode.setOrientation(orInArbiTrack);
-        }
+            modelNode.setOrientation(orInArbiTrack);
+            modelNode.play();*/
     }
 
     @Override
     public void didTrack(ARImageTrackable arImageTrackable) {
-        List<ARNode> arNodes = arImageTrackable.getWorld().getChildren();
-        for(ARNode arNode : arNodes) {
-            ARImageNode imageNode = arImageNodes.get(Integer.parseInt(arNode.getName()));
-            // Get ArbiTrack instance
-            ARArbiTrack arArbiTrack = ARArbiTrack.getInstance();
-            // Get model nodes position relative to camera
-            Vector3f fullPos = arArbiTrack.getTargetNode().getFullTransform().mult(Vector3f.ZERO);
-            // Get models position relative to ArbiTracks world.
-            Vector3f posInArbiTrack = arArbiTrack.getWorld().getFullTransform().invert().mult(fullPos);
-            // Get models orientation relative to ArbiTracks world.
-            Quaternion orInArbiTrack = arArbiTrack.getWorld().getFullOrientation().inverse().mult((imageNode.getFullOrientation()));
-            // Add the model node as a child of ArbiTrack
-            arArbiTrack.getWorld().addChild(imageNode);
-            // Change model nodes position to be relative to the marker nodes world
-            imageNode.setPosition(posInArbiTrack);
-            // Change model nodes orientation to be relative to the marker nodes world
-            imageNode.setOrientation(orInArbiTrack);
-        }
+        /*int id = Integer.parseInt(arImageTrackable.getName());
+        ARModelNode modelNode = arModelNodes.get(id - 1);
+
+        ARArbiTrack arArbiTrack = ARArbiTrack.getInstance();
+        // Get model nodes position relative to camera
+        Vector3f fullPos = arArbiTrack.getTargetNode().getFullTransform().mult(Vector3f.ZERO);
+        // Get models position relative to ArbiTracks world.
+        Vector3f posInArbiTrack = arArbiTrack.getWorld().getFullTransform().invert().mult(fullPos);
+        // Get models orientation relative to ArbiTracks world.
+        Quaternion orInArbiTrack = arArbiTrack.getWorld().getFullOrientation().inverse().mult((modelNode.getFullOrientation()));
+        // Add the model node as a child of ArbiTrack
+        //arArbiTrack.getWorld().addChild(modelNode);
+        // Change model nodes position to be relative to the marker nodes world
+        modelNode.setPosition(posInArbiTrack);
+        // Change model nodes orientation to be relative to the marker nodes world
+        modelNode.setOrientation(orInArbiTrack);*/
     }
 
     @Override
@@ -94,6 +91,7 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
         setContentView(R.layout.activity_fullscreen_ar);
 
         arImageNodes = new ArrayList<ARImageNode>();
+        arModelNodes = new ArrayList<ARModelNode>();
         //arbitrack_state  = ARBITRACK_STATE.ARBI_PLACEMENT;
     }
 
@@ -316,6 +314,9 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
                     videoTexture.loadFromPath(im.augmentationPath.get(2));
                     ARAlphaVideoNode videoNode = new ARAlphaVideoNode(videoTexture);
 
+                    float scale = trackable.getWidth() / videoTexture.getWidth();
+                    videoNode.scaleByUniform(scale);
+
                     trackable.getWorld().addChild(videoNode);
                 }
             }
@@ -323,11 +324,13 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
 
             if (im.getAugmentationType().equals("model")){
                 ARModelImporter modelImporter = new ARModelImporter();
+                //modelImporter.loadFromAsset("ben.jet");
                 modelImporter.loadFromPath(im.augmentationPath.get(2));
                 ARModelNode modelNode = (ARModelNode) modelImporter.getNode();
-
+                arModelNodes.add(modelNode);
                 // Load model texture
-                ARTexture2D texture2D = new ARTexture2D();
+                ARTexture2D texture2D = new ARTexture2D(textureId);
+                //texture2D.loadFromAsset("bigBenTexture.png");
                 texture2D.loadFromPath(im.augmentationPath.get(3));
                 //texture2D.loadFromPath(tempTrack.getTextureFilePath());
 
@@ -341,29 +344,32 @@ public class FullscreenAR extends ARActivity implements ARImageTrackableListener
                     meshNode.setMaterial(material);
                 }
 
-                modelNode.scaleByUniform(0.25f);
+                modelNode.scaleByUniform(8.5f);
 
 
                 trackable = new ARImageTrackable(Integer.toString(im.getId()));
+                //trackable.loadFromAsset("komus.jpg");
                 trackable.loadFromPath(im.augmentationPath.get(1));
                 // Initialise image node
                 // ARImageNode imageNode = new ARImageNode("texture1.jpg");
 
-                trackable.getWorld().addChild(modelNode);
-                /*trackable.addListener(this);
+                tracker.addTrackable(trackable);
+                //trackable.addListener(this);
 
-                ARArbiTrack arArbiTrack = ARArbiTrack.getInstance();
-                arArbiTrack.initialise();
+                trackable.getWorld().addChild(modelNode);
+
+                textureId++;
+                /*trackable.addListener(this);*/
 
                 // Add Activity to ARArbiTrack listeners
-                arArbiTrack.addListener(this);
+                /*arArbiTrack.addListener(this);
 
                 // Create empty target node
                 ARNode targetNode = new ARNode();
                 targetNode.setName("targetNode");
 
                 // Add target node to image trackable world
-                imageTrackable.getWorld().addChild(targetNode);
+                trackable.getWorld().addChild(targetNode);
 
                 // Set blank node as target node for ArbiTrack
                 arArbiTrack.setTargetNode(targetNode);*/

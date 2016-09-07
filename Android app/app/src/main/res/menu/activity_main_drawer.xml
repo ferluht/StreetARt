@@ -10,10 +10,10 @@
             android:title="Map" />
         <item
             android:id="@+id/nav_arts"
-            android:title="My arts" />
+            android:title="Upload" />
         <item
             android:id="@+id/nav_updates"
-            android:title="Updates" />
+            android:title="My Arts" />
         <item
             android:id="@+id/nav_favorite"
             android:title="Favorite" />
