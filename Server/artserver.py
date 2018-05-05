@@ -5,8 +5,6 @@ from playhouse.shortcuts import model_to_dict
 import json
 import os
 import os.path
-import time
-from werkzeug import secure_filename
 from gevent.pywsgi import WSGIServer
 from gevent import monkey
 from shutil import copyfile
@@ -65,7 +63,7 @@ def download(filename):
         f = open(file, 'rb')
         while True:
             piece = f.read(CHUNK_SIZE)
-            print file
+            print (file)
             if not piece:
                 break
             yield piece

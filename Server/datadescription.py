@@ -1,6 +1,6 @@
 from peewee import *
 
-ar_db = PostgresqlDatabase('arreality', user='root')
+ar_db = PostgresqlDatabase('arreality', user='root', password='root', host='db', port=5432)
 
 class Object(Model):
     name = CharField()

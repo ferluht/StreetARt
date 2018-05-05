@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    db:
+        image: postgres:10
+        restart: always
+        volumes:
+          - ./postgres_data:/var/lib/postgresql/data
+        environment:
+          - POSTGRES_DB=arreality
+          - POSTGRES_USER=root
+          - POSTGRES_PASSWORD=root
+
+
+    artserver:
+        build: ./
+        restart: always

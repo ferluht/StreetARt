@@ -173,12 +173,13 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void setUpMapMarkers(List<ARRealityObject> arRealityObjects) {
-        for (int i = 0; i < arRealityObjects.size(); i++) {
-            ARRealityObject tempObject = arRealityObjects.get(i);
-            map.addMarker(new MarkerOptions().position(new LatLng(tempObject.getLat(), tempObject.getLng()))
-                    .title(tempObject.getName()));
+        if (arRealityObjects != null) {
+            for (int i = 0; i < arRealityObjects.size(); i++) {
+                ARRealityObject tempObject = arRealityObjects.get(i);
+                map.addMarker(new MarkerOptions().position(new LatLng(tempObject.getLat(), tempObject.getLng()))
+                        .title(tempObject.getName()));
+            }
         }
-
     }
 
     @Override

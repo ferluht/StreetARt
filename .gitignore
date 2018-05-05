@@ -1,2 +1,11 @@
 
 Kudan GUI control/.idea
+
+Server/.idea
+*.xml
+*.gradle
+*.xml
+Android app/.idea/.name
+*.xml
+Android app/.idea/.name
+Android app/.idea/modules.xml

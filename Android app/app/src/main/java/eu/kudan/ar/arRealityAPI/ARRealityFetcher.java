@@ -77,21 +77,25 @@ public class ARRealityFetcher extends AsyncTask<Void, Void, Void>
 
         SQLiteDatabase mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
 
-        arRealityFetcherInterface.setUpMapMarkers(objects);
+        if (objects != null) {
+            arRealityFetcherInterface.setUpMapMarkers(objects);
 
-        ARRealityDownloadQueue arRealityDownloadQueue = new ARRealityDownloadQueue(this);
-        for (ARRealityObject tempObj : objects) {
-            Cursor cursor = mSqLiteDatabase.rawQuery("SELECT * FROM " +
-                    ARRealityDBHelper.LOADED_OBJECTS_TABLE +
-                    " WHERE " + ARRealityDBHelper.ID_COLUMN + " = ?",
-                    new String[] {Integer.toString(tempObj.getId())});
+            ARRealityDownloadQueue arRealityDownloadQueue = new ARRealityDownloadQueue(this);
 
-            tempObj.initAssetsWithId();
-            List<ARRealityAsset> assets = tempObj.getAssets();
-            if (!(cursor.moveToFirst()) || cursor.getCount() ==0) arRealityDownloadQueue.addAssetsToQueue(assets);
-            else tempObj.isDownloaded = true;
+            for (ARRealityObject tempObj : objects) {
+                Cursor cursor = mSqLiteDatabase.rawQuery("SELECT * FROM " +
+                                ARRealityDBHelper.LOADED_OBJECTS_TABLE +
+                                " WHERE " + ARRealityDBHelper.ID_COLUMN + " = ?",
+                        new String[]{Integer.toString(tempObj.getId())});
+
+                tempObj.initAssetsWithId();
+                List<ARRealityAsset> assets = tempObj.getAssets();
+                if (!(cursor.moveToFirst()) || cursor.getCount() == 0)
+                    arRealityDownloadQueue.addAssetsToQueue(assets);
+                else tempObj.isDownloaded = true;
+            }
+            arRealityDownloadQueue.execute();
         }
-        arRealityDownloadQueue.execute();
     }
 
     @Override

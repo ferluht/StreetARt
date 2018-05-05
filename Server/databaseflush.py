@@ -12,4 +12,4 @@ assets = [f for f in listdir(assetsPath) if isfile(join(assetsPath, f))]
 if assets:
     for fil in assets:
         remove(assetsPath + '/' + fil)
-        print fil + " removed\r"
+        print (fil + " removed\r")
